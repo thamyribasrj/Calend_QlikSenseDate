@@ -1,0 +1,27 @@
+Data_tmp:
+
+LOAD MIN(DATA_VENDA) AS  MenorData
+    ,MAX(DATA_VENDA) AS  MaiorData
+Resident Vendas;
+
+LET vMenorData = PEEK('MenorData');
+LET vMaiorData = PEEK('MaiorData');
+DROP Table Data_tmp;
+
+
+Calendario:
+LOAD
+
+    Date(Data, 'DD/MM/YYYY')             								AS DataAtual,
+    Date(Data, 'DD/MM/YYYY')             								AS "Data",
+    Day(Data)                            				  				AS "Dia",
+    Dual(Capitalize(Month(Data)), Num(Month(Data)))       				AS "Mês",
+    Year(Data)                                            				AS "Ano",
+   dual(Capitalize(MonthName(Data)),(Year(Data)*100)+Num(Month(Data)))  AS "Mês Ano";
+
+    LOAD
+    DATE('$(vMenorData)' + RecNo() - 1,'DD/MM/YYYY')					 AS "Data"
+ AUTOGENERATE (vMaiorData - vMenorData + 1);
+
+Store Calendario into [lib://QVD_T\Calendario.qvd](qvd); 
+Drop Table Calendario;
